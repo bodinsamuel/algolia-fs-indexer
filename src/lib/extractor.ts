@@ -1,8 +1,12 @@
 import mm from "micromatch";
+import { Item } from "./filesystem";
 
 class Extractor {
+  name: string;
   _patterns: string[];
+
   constructor() {
+    this.name = "";
     this._patterns = [];
   }
 
@@ -11,16 +15,12 @@ class Extractor {
     return this;
   }
 
-  run(file: any): object | null {
-    if (!this._filter(file.name, this._patterns)) {
-      return null;
-    }
-
-    return {};
+  run(_file: Item): object | null {
+    return null;
   }
 
-  _filter(name: string, patterns: string[]): boolean {
-    if (patterns.length <= 0) {
+  _filter(name: string): boolean {
+    if (!this._patterns || this._patterns.length <= 0) {
       return true;
     }
     return mm.all(name, this._patterns);

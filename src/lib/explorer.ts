@@ -63,7 +63,7 @@ class Explorer {
       }
       doc = {
         ...doc,
-        ...extra
+        [this._extractors[0].name]: extra
       };
     }
 

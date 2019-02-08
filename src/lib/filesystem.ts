@@ -1,3 +1,4 @@
+import path from "path";
 import fs, { Dirent } from "fs";
 const fsPromises = fs.promises;
 
@@ -14,6 +15,7 @@ export interface Item {
   type: FileType;
   name: string;
   path: string;
+  extension: string;
 }
 
 class Filesystem {
@@ -26,10 +28,12 @@ class Filesystem {
     }
   }
 
-  async listDir(path: string): Promise<Item[]> {
+  async listDir(pathName: string): Promise<Item[]> {
     try {
-      // @ts-ignore-line
-      const readdir = await fsPromises.readdir(path, { withFileTypes: true });
+      const readdir = await fsPromises.readdir(pathName, {
+        // @ts-ignore
+        withFileTypes: true
+      });
       return readdir
         .map(
           (file: Dirent): Item | null => {
@@ -40,7 +44,8 @@ class Filesystem {
             return {
               name: file.name,
               type: file.isDirectory() ? FileType.Directory : FileType.File,
-              path: `${path}/${file.name}`
+              path: `${pathName}/${file.name}`,
+              extension: path.extname(file.name).substr(1)
             };
           }
         )

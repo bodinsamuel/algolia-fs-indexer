@@ -5,7 +5,7 @@ import clear from "clear";
 import figlet from "figlet";
 
 import Explorer from "./lib/explorer";
-import Extractors from "./lib/extractors";
+import { Base } from "./lib/extractors";
 import Filesystem from "./lib/filesystem";
 
 (async () => {
@@ -20,8 +20,12 @@ import Filesystem from "./lib/filesystem";
     const explorer = await new Explorer(base, fs)
       .maxFiles(1000)
       .extract([
-        new Extractors.Base().match(["!*.jpg"]),
-        new Extractors.Images().match(["*.tiff"]).faces()
+        new Base()
+          .withFiles()
+          .match(["*.jpg"])
+          .extension()
+          .filetype()
+        // new Extractors.Images().faces()
       ])
       .explore();
     console.log(explorer.items);
