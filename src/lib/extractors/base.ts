@@ -1,5 +1,5 @@
-import Extractor from "./../extractor";
-import { Item, FileType } from "../filesystem";
+import Extractor from "../Extractor";
+import { Item, FileType } from "../Filesystem";
 import { getFileType } from "../helpers";
 
 class Base extends Extractor {

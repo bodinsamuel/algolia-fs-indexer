@@ -1,4 +1,4 @@
-import Extractor from "./../extractor";
+import Extractor from "../Extractor";
 
 class Images extends Extractor {
   faces() {

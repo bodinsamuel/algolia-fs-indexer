@@ -2,7 +2,7 @@ import path from "path";
 import fs, { Dirent } from "fs";
 const fsPromises = fs.promises;
 
-import ExplorerError from "./error";
+import ExplorerError from "./Error";
 
 export interface Stats extends fs.Stats {}
 

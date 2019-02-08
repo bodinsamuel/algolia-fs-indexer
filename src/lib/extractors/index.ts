@@ -1,4 +1,4 @@
-import Base from "./base";
-import Images from "./images";
+import Base from "./Base";
+import Images from "./Images";
 
 export { Base, Images };

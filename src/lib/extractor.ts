@@ -1,5 +1,5 @@
 import mm from "micromatch";
-import { Item } from "./filesystem";
+import { Item } from "./Filesystem";
 
 class Extractor {
   name: string;

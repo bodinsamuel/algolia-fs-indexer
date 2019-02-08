@@ -4,9 +4,9 @@ import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
 
-import Explorer from "./lib/explorer";
+import Explorer from "./lib/Explorer";
 import { Base } from "./lib/extractors";
-import Filesystem from "./lib/filesystem";
+import Filesystem from "./lib/Filesystem";
 
 (async () => {
   clear();

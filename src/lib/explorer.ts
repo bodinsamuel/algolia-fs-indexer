@@ -1,6 +1,6 @@
-import Extractor from "./extractor";
-import ExplorerError from "./error";
-import Filesystem, { FileType, Item } from "./filesystem";
+import Extractor from "./Extractor";
+import ExplorerError from "./Error";
+import Filesystem, { FileType, Item } from "./Filesystem";
 
 export interface Document {
   type: FileType;
