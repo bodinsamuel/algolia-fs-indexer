@@ -12,10 +12,13 @@ export enum FileType {
 }
 
 export interface Item {
+  id: string;
   type: FileType;
   name: string;
   path: string;
   extension: string;
+  stats: Stats;
+  buffer: fs.BinaryData | boolean;
 }
 
 class Filesystem {
@@ -34,22 +37,28 @@ class Filesystem {
         // @ts-ignore
         withFileTypes: true
       });
-      return readdir
-        .map(
-          (file: Dirent): Item | null => {
-            if (!file.isFile() && !file.isDirectory()) {
-              return null;
-            }
-
-            return {
-              name: file.name,
-              type: file.isDirectory() ? FileType.Directory : FileType.File,
-              path: `${pathName}/${file.name}`,
-              extension: path.extname(file.name).substr(1)
-            };
+      const promises: Promise<Item | void>[] = readdir.map(
+        async (file: Dirent): Promise<Item | void> => {
+          if (!file.isFile() && !file.isDirectory()) {
+            return;
           }
-        )
-        .filter((value: any) => Boolean(value));
+
+          const fullPath = path.join(pathName, file.name);
+          const stats = await this.stats(fullPath);
+          return {
+            id: String(stats.ino),
+            name: file.name,
+            type: file.isDirectory() ? FileType.Directory : FileType.File,
+            path: fullPath,
+            extension: path.extname(file.name).substr(1),
+            buffer: file.isFile() && fs.readFileSync(fullPath),
+            stats
+          };
+        }
+      );
+
+      const solved = await Promise.all(promises);
+      return solved.filter((value: any) => Boolean(value)) as Item[];
     } catch (e) {
       throw e;
     }

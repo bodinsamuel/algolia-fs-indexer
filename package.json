@@ -17,13 +17,17 @@
     "pizza": "./lib/index.js"
   },
   "dependencies": {
+    "@types/algoliasearch": "3.30.2",
     "@types/figlet": "1.2.0",
     "@types/node": "10.12.23",
+    "algoliasearch": "3.32.0",
     "chalk": "^2.4.2",
     "clear": "^0.1.0",
     "commander": "^2.19.0",
+    "exif-parser": "0.1.12",
     "figlet": "^1.2.1",
     "image-extensions": "1.1.0",
+    "jpeg-exif": "1.1.3",
     "micromatch": "3.1.10",
     "nodemon": "^1.18.9",
     "path": "^0.12.7",

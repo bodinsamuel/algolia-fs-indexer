@@ -3,10 +3,12 @@
 import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
+import Algolia from "algoliasearch";
 
 import Explorer from "./lib/Explorer";
-import { Base } from "./lib/extractors";
+import { Base, Images } from "./lib/extractors";
 import Filesystem from "./lib/Filesystem";
+import Indexer from "./lib/Indexer";
 
 (async () => {
   clear();
@@ -15,20 +17,29 @@ import Filesystem from "./lib/Filesystem";
   );
 
   try {
-    const base = "/Users/samuelbodin/Dropbox/Photo/";
+    const AlgoliaClient = Algolia("KECOEVPMGH", process.env.APIKEY as string);
+
+    const base = "/Users/samuelbodin/Dropbox/scan/A001";
     const fs = new Filesystem();
-    const explorer = await new Explorer(base, fs)
+    const indexer = new Indexer(AlgoliaClient);
+
+    await new Explorer(base, fs, indexer)
       .maxFiles(1000)
       .extract([
         new Base()
           .withFiles()
           .match(["*.jpg"])
           .extension()
-          .filetype()
-        // new Extractors.Images().faces()
+          .filetype(),
+        new Images()
+          .match(["*"])
+          .size()
+          .geoloc()
       ])
       .explore();
-    console.log(explorer.items);
+
+    console.log(indexer._items);
+    indexer.index();
   } catch (e) {
     if (e._explorer) {
       console.error(e.message);
