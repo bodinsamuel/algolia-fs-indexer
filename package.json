@@ -1,0 +1,35 @@
+{
+  "name": "algolia-fs-indexer",
+  "version": "0.0.1",
+  "description": "Algolia Filesystem Indexer",
+  "repository": "https://github.com/bodinsamuel/algolia-fs-indexer.git",
+  "author": "Samuel Bodin <samuel.bodin@algolia.com>",
+  "license": "MIT",
+  "private": true,
+  "main": "./lib/index.js",
+  "scripts": {
+    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node --files --project tsconfig.json' src/index.ts",
+    "build": "tsc -p .",
+    "cli": "node ./lib/index.js",
+    "launch": "yarn build && yarn cli"
+  },
+  "bin": {
+    "pizza": "./lib/index.js"
+  },
+  "dependencies": {
+    "@types/figlet": "1.2.0",
+    "@types/node": "10.12.23",
+    "chalk": "^2.4.2",
+    "clear": "^0.1.0",
+    "commander": "^2.19.0",
+    "figlet": "^1.2.1",
+    "micromatch": "3.1.10",
+    "nodemon": "^1.18.9",
+    "path": "^0.12.7",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/micromatch": "3.1.0"
+  }
+}
