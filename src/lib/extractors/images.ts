@@ -32,7 +32,7 @@ class Images extends Extractor {
   }
 
   run(file: Item): object | null {
-    if (!this._filter(file.name)) {
+    if (!this._filter(file)) {
       return null;
     }
 

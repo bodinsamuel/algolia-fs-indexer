@@ -1,17 +1,25 @@
 import mm from "micromatch";
-import { Item } from "./Filesystem";
+import { Item, FileType } from "./Filesystem";
 
 class Extractor {
   name: string;
-  _patterns: string[];
+  _dirs: string[];
+  _files: string[];
 
   constructor() {
     this.name = "";
-    this._patterns = [];
+
+    this._dirs = [];
+    this._files = [];
   }
 
-  match(value: string[]) {
-    this._patterns = value;
+  matchDirs(match: string[]) {
+    this._dirs = match;
+    return this;
+  }
+
+  matchFiles(match: string[]) {
+    this._files = match;
     return this;
   }
 
@@ -19,11 +27,17 @@ class Extractor {
     return null;
   }
 
-  _filter(name: string): boolean {
-    if (this._patterns.length <= 0) {
+  _filter(file: Item): boolean {
+    if (this._dirs.length <= 0 && this._files.length <= 0) {
       return true;
     }
-    return mm.any(name, this._patterns);
+
+    if (file.type === FileType.File) {
+      return mm.any(file.name, this._files);
+    } else if (file.type === FileType.Directory) {
+      return mm.any(file.name, this._dirs);
+    }
+    return true;
   }
 }
 

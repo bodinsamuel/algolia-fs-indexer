@@ -3,28 +3,14 @@ import { Item, FileType } from "../Filesystem";
 import { getFileType } from "../helpers";
 
 class Base extends Extractor {
-  _dirs: boolean;
-  _files: boolean;
   _filetype: boolean;
   _extension: boolean;
 
   constructor() {
     super();
     this.name = "base";
-    this._dirs = false;
-    this._files = false;
     this._filetype = false;
     this._extension = false;
-  }
-
-  withDirs() {
-    this._dirs = true;
-    return this;
-  }
-
-  withFiles() {
-    this._files = true;
-    return this;
   }
 
   filetype() {
@@ -38,14 +24,7 @@ class Base extends Extractor {
   }
 
   run(file: Item): object | null {
-    if (
-      (!this._dirs && file.type === FileType.Directory) ||
-      (!this._files && file.type === FileType.File)
-    ) {
-      return null;
-    }
-
-    if (!this._filter(file.name)) {
+    if (!this._filter(file)) {
       return null;
     }
     const base: any = {};
@@ -55,7 +34,8 @@ class Base extends Extractor {
     }
 
     if (this._filetype) {
-      base.filetype = getFileType(file.extension);
+      base.filetype =
+        file.type === FileType.File ? getFileType(file.extension) : "";
     }
 
     return base;

@@ -6,7 +6,7 @@ import figlet from "figlet";
 import Algolia from "algoliasearch";
 
 import Explorer from "./lib/Explorer";
-import { Base, Images } from "./lib/extractors";
+import { Base } from "./lib/extractors";
 import Filesystem from "./lib/Filesystem";
 import Indexer from "./lib/Indexer";
 
@@ -19,7 +19,7 @@ import Indexer from "./lib/Indexer";
   try {
     const AlgoliaClient = Algolia("KECOEVPMGH", process.env.APIKEY as string);
 
-    const base = "/Users/samuelbodin/Dropbox/scan/A001";
+    const base = "/Users/samuelbodin/Dropbox/scan/";
     const fs = new Filesystem();
     const indexer = new Indexer(AlgoliaClient);
 

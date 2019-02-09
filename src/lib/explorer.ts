@@ -1,3 +1,5 @@
+import path from "path";
+
 import Extractor from "./Extractor";
 import ExplorerError from "./Error";
 import Filesystem, { FileType, Item } from "./Filesystem";
@@ -7,6 +9,7 @@ export interface Document {
   objectID: string;
   type: FileType;
   name: string;
+  path: string;
   [s: string]: any;
 }
 
@@ -52,7 +55,8 @@ class Explorer {
     let doc: Document = {
       objectID: file.id,
       type: file.type,
-      name: file.name
+      name: file.name,
+      path: file.path.replace(this._base, "")
     };
 
     if (this._extractors.length > 0) {
@@ -83,15 +87,29 @@ class Explorer {
     };
   }
 
-  async explore(): Promise<Explorer> {
+  async start(): Promise<Explorer> {
     console.log("running");
-    this.checkBase();
 
-    const files = await this._fs.listDir(this._base);
+    this.checkBase();
+    await this.explore(this._base);
+    return this;
+  }
+
+  async explore(dirPath: string): Promise<Explorer> {
+    const files = await this._fs.listDir(dirPath);
     const parsed = files
       .map(file => this.runExtractors(file))
       .filter(doc => Boolean(doc)) as Document[];
 
+    const p = parsed.map(
+      (doc): Promise<any> => {
+        if (doc.type === FileType.Directory) {
+          return this.explore(path.join(this._base, doc.path));
+        }
+        return Promise.resolve();
+      }
+    );
+    await Promise.all(p);
     this._indexer.push(...parsed);
 
     return this;
