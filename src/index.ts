@@ -28,18 +28,19 @@ import Indexer from "./lib/Indexer";
       .extract([
         new Base()
           .withFiles()
-          .match(["*.jpg"])
+          .match(["*.jpg", "*.tif"])
           .extension()
           .filetype(),
         new Images()
-          .match(["*"])
           .size()
           .geoloc()
+          .keywords()
+          .camera()
       ])
       .explore();
 
-    console.log(indexer._items);
-    indexer.index();
+    // console.log(indexer._items);
+    // indexer.index();
   } catch (e) {
     if (e._explorer) {
       console.error(e.message);

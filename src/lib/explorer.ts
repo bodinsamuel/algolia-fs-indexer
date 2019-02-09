@@ -54,20 +54,25 @@ class Explorer {
       type: file.type,
       name: file.name
     };
+
     if (this._extractors.length > 0) {
-      this._extractors.map((extractor, i) => {
+      for (let index = 0; index < this._extractors.length; index++) {
+        const extractor = this._extractors[index];
         doc = {
           ...doc,
           ...this.runExtractor(doc, extractor, file)
         };
-        if (i === 0 && !doc[extractor.name]) return;
-      });
+
+        if (index === 0 && !(extractor.name in doc)) {
+          return null;
+        }
+      }
     }
 
     return doc;
   }
 
-  runExtractor(_doc: Document, extractor: Extractor, file: Item) {
+  runExtractor(_doc: Document, extractor: Extractor, file: Item): object {
     const extra = extractor.run(file);
     if (!extra) {
       return {};

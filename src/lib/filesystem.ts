@@ -18,7 +18,7 @@ export interface Item {
   path: string;
   extension: string;
   stats: Stats;
-  buffer: fs.BinaryData | boolean;
+  buffer?: fs.BinaryData;
 }
 
 class Filesystem {
@@ -27,7 +27,7 @@ class Filesystem {
       const lstat = await fsPromises.lstat(path);
       return lstat;
     } catch (e) {
-      throw new ExplorerError("dir_does_not_exist");
+      throw new ExplorerError(`path_does_not_exist: ${path}`);
     }
   }
 
@@ -51,7 +51,7 @@ class Filesystem {
             type: file.isDirectory() ? FileType.Directory : FileType.File,
             path: fullPath,
             extension: path.extname(file.name).substr(1),
-            buffer: file.isFile() && fs.readFileSync(fullPath),
+            buffer: undefined, //file.isFile() && fs.readFileSync(fullPath),
             stats
           };
         }
@@ -63,10 +63,6 @@ class Filesystem {
       throw e;
     }
   }
-
-  // readFile(path: string): Promise<string> {
-  //   return path;
-  // }
 }
 
 export default Filesystem;

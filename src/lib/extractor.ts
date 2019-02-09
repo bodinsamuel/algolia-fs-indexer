@@ -20,10 +20,10 @@ class Extractor {
   }
 
   _filter(name: string): boolean {
-    if (!this._patterns || this._patterns.length <= 0) {
+    if (this._patterns.length <= 0) {
       return true;
     }
-    return mm.all(name, this._patterns);
+    return mm.any(name, this._patterns);
   }
 }
 

@@ -24,7 +24,6 @@
     "chalk": "^2.4.2",
     "clear": "^0.1.0",
     "commander": "^2.19.0",
-    "exif-parser": "0.1.12",
     "figlet": "^1.2.1",
     "image-extensions": "1.1.0",
     "jpeg-exif": "1.1.3",
