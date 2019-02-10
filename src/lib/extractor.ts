@@ -28,8 +28,11 @@ class Extractor {
   }
 
   _filter(file: Item): boolean {
-    if (this._dirs.length <= 0 && this._files.length <= 0) {
-      return true;
+    if (
+      (this._dirs.length <= 0 && file.type === FileType.Directory) ||
+      (this._files.length <= 0 && file.type === FileType.File)
+    ) {
+      return false;
     }
 
     if (file.type === FileType.File) {

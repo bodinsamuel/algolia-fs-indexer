@@ -10,6 +10,7 @@ class Images extends Extractor {
   _geoloc: boolean;
   _keywords: boolean;
   _camera: boolean;
+  _region: boolean;
 
   constructor() {
     super();
@@ -19,13 +20,14 @@ class Images extends Extractor {
     this._geoloc = false;
     this._keywords = false;
     this._camera = false;
+    this._region = false;
   }
 
   identify(path: string) {
     const spawn = require("child_process").spawnSync;
     const { stdout, stderr } = spawn("exiftool", ["-j", path]);
     if (stderr.toString()) {
-      console.log("err", stderr.toString());
+      console.log("err", path, stderr.toString());
       return [{}];
     }
     return JSON.parse(Buffer.from(stdout).toString());
@@ -64,6 +66,10 @@ class Images extends Extractor {
       image.focal = id.FocalLengthIn35mmFormat || "";
     }
 
+    if (this._region) {
+      image.regionName = id.RegionName || [];
+    }
+
     return image;
   }
 
@@ -84,6 +90,11 @@ class Images extends Extractor {
 
   camera() {
     this._camera = true;
+    return this;
+  }
+
+  region() {
+    this._region = true;
     return this;
   }
 }

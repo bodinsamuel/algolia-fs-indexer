@@ -22,13 +22,17 @@ yarn start
 
 ## Todo
 
-- Recursive
-- Argv
-- Chunk indexing
+- [x] Recursive
+- [x] Argv
+- [x] Chunk indexing
+- Extractor prefiltering
+- Extractor child process
+- Geoloc correction
+- Faces position
 - Full reindex (.tmp)
 - MaxFiles
 - MaxDepth
-- DryRun
+- [x] DryRun
 - Inotify
 - Unit test
 - Publish npm

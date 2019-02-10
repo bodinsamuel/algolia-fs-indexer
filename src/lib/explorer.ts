@@ -4,6 +4,7 @@ import Extractor from "./Extractor";
 import ExplorerError from "./Error";
 import Filesystem, { FileType, Item } from "./Filesystem";
 import Indexer from "./Indexer";
+import { EventEmitter } from "events";
 
 export interface Document {
   objectID: string;
@@ -13,7 +14,7 @@ export interface Document {
   [s: string]: any;
 }
 
-class Explorer {
+class Explorer extends EventEmitter {
   _base: string;
   _maxDepth?: number;
   _maxFiles?: number;
@@ -22,6 +23,7 @@ class Explorer {
   _indexer: Indexer;
 
   constructor(base: string, fs: Filesystem, indexer: Indexer) {
+    super();
     this._base = base;
     this._fs = fs;
     this._indexer = indexer;
@@ -68,6 +70,7 @@ class Explorer {
         };
 
         if (index === 0 && !(extractor.name in doc)) {
+          this.emit("skipped", file);
           return null;
         }
       }
@@ -88,21 +91,27 @@ class Explorer {
   }
 
   async start(): Promise<Explorer> {
-    console.log("running");
+    this.emit("start");
 
     this.checkBase();
     await this.explore(this._base);
+
+    this.emit("end");
     return this;
   }
 
   async explore(dirPath: string): Promise<Explorer> {
     const files = await this._fs.listDir(dirPath);
     const parsed = files
-      .map(file => this.runExtractors(file))
+      .map(file => {
+        this.emit("found", file);
+        return this.runExtractors(file);
+      })
       .filter(doc => Boolean(doc)) as Document[];
 
     const p = parsed.map(
       (doc): Promise<any> => {
+        this.emit("document", doc);
         if (doc.type === FileType.Directory) {
           return this.explore(path.join(this._base, doc.path));
         }
@@ -110,7 +119,6 @@ class Explorer {
       }
     );
     await Promise.all(p);
-    this._indexer.push(...parsed);
 
     return this;
   }

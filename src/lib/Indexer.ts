@@ -1,13 +1,18 @@
 import Algolia from "algoliasearch";
 import { Document } from "./explorer";
+import { EventEmitter } from "events";
 
-class Indexer {
-  _algolia: Algolia.Client;
+class Indexer extends EventEmitter {
+  _algolia?: Algolia.Client;
+  _index: string;
   _chunk: number;
   _items: Document[];
 
-  constructor(algolia: Algolia.Client) {
+  constructor(index: string, algolia?: Algolia.Client) {
+    super();
+
     this._algolia = algolia;
+    this._index = index;
 
     this._chunk = 100;
     this._items = [];
@@ -18,23 +23,35 @@ class Indexer {
     return this;
   }
 
-  async index() {
-    const docs = this._items.slice(0, this._chunk);
+  async indexChunk() {
+    if (!this._algolia) {
+      return;
+    }
+
+    const docs = this._items.splice(0, this._chunk);
     await this._algolia.batch(
       docs.map(
         (doc): Algolia.Action => {
           return {
             action: "addObject",
-            indexName: process.env.INDEX_NAME as string,
+            indexName: this._index,
             body: doc as Object
           };
         }
       )
     );
+    this.emit("indexed", { count: docs.length });
   }
 
-  push(...doc: Document[]) {
-    this._items.push(...doc);
+  async indexAll(): Promise<Boolean> {
+    while (this._items.length >= 0) {
+      await this.indexChunk();
+    }
+    return true;
+  }
+
+  push(doc: Document) {
+    this._items.push(doc);
   }
 }
 
