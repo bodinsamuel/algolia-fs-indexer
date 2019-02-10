@@ -25,8 +25,9 @@ yarn start
 - [x] Recursive
 - [x] Argv
 - [x] Chunk indexing
-- Extractor prefiltering
-- Extractor child process
+- [x] Extractor prefiltering
+- [x] Extractor child process
+- [x] export type into separate files
 - Geoloc correction
 - Faces position
 - Full reindex (.tmp)

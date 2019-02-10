@@ -2,8 +2,7 @@
 // import util from "util";
 
 import Extractor from "../Extractor";
-import { Item } from "../filesystem";
-// import ExplorerError from "../Error";
+import { Item } from "../../types/Filesystem";
 
 class Images extends Extractor {
   _size: boolean;
@@ -23,23 +22,24 @@ class Images extends Extractor {
     this._region = false;
   }
 
-  identify(path: string) {
-    const spawn = require("child_process").spawnSync;
-    const { stdout, stderr } = spawn("exiftool", ["-j", path]);
-    if (stderr.toString()) {
-      console.log("err", path, stderr.toString());
-      return [{}];
-    }
-    return JSON.parse(Buffer.from(stdout).toString());
+  async identify(path: string): Promise<object[]> {
+    return new Promise(resolve => {
+      const spawn = require("child_process").spawn;
+      const exec = spawn("exiftool", ["-j", path]);
+      exec.stdout.on("data", (data: any) => {
+        resolve(JSON.parse(Buffer.from(data).toString()));
+      });
+
+      exec.stderr.on("data", (data: any) => {
+        console.log("err", path, data.toString());
+        return resolve([{}]);
+      });
+    });
   }
 
-  run(file: Item): object | null {
-    if (!this._filter(file)) {
-      return null;
-    }
-
+  async process(file: Item): Promise<object | null> {
     const image: any = {};
-    let id: any = this.identify(file.path)[0];
+    let id: any = (await this.identify(file.fullPath))[0];
 
     image.dateCreated = id.DateTimeOriginal || id.CreateDate;
 

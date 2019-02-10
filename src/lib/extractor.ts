@@ -1,46 +1,29 @@
-import mm from "micromatch";
-import { Item, FileType } from "./Filesystem";
+import { Item } from "../types/Filesystem";
+import Filter from "./Filter";
 
 class Extractor {
   name: string;
-  _dirs: string[];
-  _files: string[];
+  _filter?: Filter;
 
   constructor() {
     this.name = "";
-
-    this._dirs = [];
-    this._files = [];
   }
 
-  matchDirs(match: string[]) {
-    this._dirs = match;
-    return this;
-  }
-
-  matchFiles(match: string[]) {
-    this._files = match;
-    return this;
-  }
-
-  run(_file: Item): object | null {
-    return null;
-  }
-
-  _filter(file: Item): boolean {
-    if (
-      (this._dirs.length <= 0 && file.type === FileType.Directory) ||
-      (this._files.length <= 0 && file.type === FileType.File)
-    ) {
-      return false;
+  async run(file: Item): Promise<any> {
+    if (!this._filter || !this._filter.check(file)) {
+      return null;
     }
 
-    if (file.type === FileType.File) {
-      return mm.any(file.name, this._files);
-    } else if (file.type === FileType.Directory) {
-      return mm.any(file.name, this._dirs);
-    }
-    return true;
+    return this.process(file);
+  }
+
+  async process(_file: Item): Promise<object | null> {
+    return {};
+  }
+
+  filter(filter: Filter) {
+    this._filter = filter;
+    return this;
   }
 }
 

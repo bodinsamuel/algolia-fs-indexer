@@ -1,6 +1,7 @@
 import Algolia from "algoliasearch";
-import { Document } from "./explorer";
 import { EventEmitter } from "events";
+
+import { Document } from "../types/Document";
 
 class Indexer extends EventEmitter {
   _algolia?: Algolia.Client;
@@ -16,6 +17,10 @@ class Indexer extends EventEmitter {
 
     this._chunk = 100;
     this._items = [];
+  }
+
+  get remaining(): number {
+    return this._items.length;
   }
 
   chunk(value: number) {
@@ -47,11 +52,13 @@ class Indexer extends EventEmitter {
     while (this._items.length >= 0) {
       await this.indexChunk();
     }
+    this.emit("end");
     return true;
   }
 
   push(doc: Document) {
     this._items.push(doc);
+    setTimeout(() => this.indexChunk(), 100);
   }
 }
 

@@ -3,26 +3,10 @@ import fs, { Dirent } from "fs";
 const fsPromises = fs.promises;
 
 import ExplorerError from "./Error";
-
-export interface Stats extends fs.Stats {}
-
-export enum FileType {
-  Directory = "Dir",
-  File = "File"
-}
-
-export interface Item {
-  id: string;
-  type: FileType;
-  name: string;
-  path: string;
-  extension: string;
-  stats: Stats;
-  buffer?: fs.BinaryData;
-}
+import { Item, FileType } from "../types/Filesystem";
 
 class Filesystem {
-  async stats(path: string): Promise<Stats> {
+  async stats(path: string): Promise<fs.Stats> {
     try {
       const lstat = await fsPromises.lstat(path);
       return lstat;
@@ -49,7 +33,7 @@ class Filesystem {
             id: String(stats.ino),
             name: file.name,
             type: file.isDirectory() ? FileType.Directory : FileType.File,
-            path: fullPath,
+            fullPath: fullPath,
             extension: path.extname(file.name).substr(1),
             buffer: undefined, //file.isFile() && fs.readFileSync(fullPath),
             stats
