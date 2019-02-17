@@ -11,7 +11,7 @@ class Filesystem {
       const lstat = await fsPromises.lstat(path);
       return lstat;
     } catch (e) {
-      throw new ExplorerError(`path_does_not_exist: ${path}`);
+      throw new ExplorerError(`path_does_not_exist: ${path}, ${e.message}`);
     }
   }
 

@@ -43,14 +43,16 @@ class Explorer extends EventEmitter {
   }
 
   async start(): Promise<Explorer> {
+    await this.checkBase();
+
     this.emit("start");
     this.end = false;
 
-    this.checkBase();
     await this.explore(this._base);
 
-    this.emit("end");
     this.end = true;
+    this.emit("end");
+
     return this;
   }
 

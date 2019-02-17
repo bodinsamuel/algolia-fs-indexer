@@ -4,6 +4,27 @@
 import Extractor from "../Extractor";
 import { Item } from "../../types/Filesystem";
 
+export interface Image {
+  dateCreated: string;
+
+  width?: number;
+  height?: number;
+
+  country?: string;
+  city?: string;
+  geoloc?: string[];
+
+  keywords?: string[];
+
+  model?: string;
+  iso?: number;
+  aperture?: string;
+  focal?: string;
+
+  regionName?: string[];
+  regionPos?: { x_y: number[]; w_h: number[] }[];
+}
+
 class Images extends Extractor {
   _size: boolean;
   _geoloc: boolean;
@@ -38,10 +59,10 @@ class Images extends Extractor {
   }
 
   async process(file: Item): Promise<object | null> {
-    const image: any = {};
     let id: any = (await this.identify(file.fullPath))[0];
-
-    image.dateCreated = id.DateTimeOriginal || id.CreateDate;
+    const image: Image = {
+      dateCreated: id.DateTimeOriginal || id.CreateDate
+    };
 
     if (this._size) {
       image.width = id.ImageWidth || 0;
@@ -67,7 +88,22 @@ class Images extends Extractor {
     }
 
     if (this._region) {
+      // Normalise
+      if (id.RegionName && !Array.isArray(id.RegionName)) {
+        id.RegionName = [id.RegionName];
+        id.RegionAreaX = [id.RegionAreaX];
+        id.RegionAreaY = [id.RegionAreaY];
+        id.RegionAreaW = [id.RegionAreaW];
+        id.RegionAreaH = [id.RegionAreaH];
+      }
       image.regionName = id.RegionName || [];
+
+      image.regionPos = image.regionName!.map((_name: string, i: number) => {
+        return {
+          x_y: [id.RegionAreaX[i], id.RegionAreaY[i]],
+          w_h: [id.RegionAreaW[i], id.RegionAreaH[i]]
+        };
+      });
     }
 
     return image;

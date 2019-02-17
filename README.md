@@ -29,7 +29,7 @@ yarn start
 - [x] Extractor child process
 - [x] export type into separate files
 - Geoloc correction
-- Faces position
+- [x] Faces position
 - Full reindex (.tmp)
 - MaxFiles
 - MaxDepth
