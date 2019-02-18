@@ -1,5 +1,5 @@
-import mm from "micromatch";
-import { Item, FileType } from "../types/Filesystem";
+import mm from 'micromatch';
+import { Item, FileType } from '../types/Filesystem';
 
 class Filter {
   _dirs: string[];
@@ -29,7 +29,7 @@ class Filter {
     }
 
     if (file.type === FileType.File) {
-      return mm.any(file.name, this._files);
+      return mm.any(file.name, this._files, { dot: true });
     } else if (file.type === FileType.Directory) {
       return mm.any(file.name, this._dirs);
     }

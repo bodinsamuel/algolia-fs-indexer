@@ -1,10 +1,10 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from 'events';
 
-import Extractor from "./Extractor";
+import Extractor from './Extractor';
 
-import { Item, FileType } from "../types/Filesystem";
-import { Document } from "../types/Document";
-import { getFileType } from "./helpers";
+import { Item, FileType } from '../types/Filesystem';
+import { Document } from '../types/Document';
+import { getFileType } from './helpers';
 
 class Processor extends EventEmitter {
   _items: Item[];
@@ -54,7 +54,7 @@ class Processor extends EventEmitter {
     items.forEach(async file => {
       const doc = await this.runExtractors(file);
       if (doc) {
-        this.emit("document", doc);
+        this.emit('document', doc);
       }
       this._processing -= 1;
       setTimeout(() => this.process(), 100);
@@ -68,7 +68,7 @@ class Processor extends EventEmitter {
       name: file.name,
       path: file.fullPath,
       ext: file.extension,
-      filetype: file.type === FileType.File ? getFileType(file.extension) : ""
+      filetype: file.type === FileType.File ? getFileType(file.extension) : '',
     };
 
     if (this._extractors.length > 0) {
@@ -76,7 +76,7 @@ class Processor extends EventEmitter {
         const extractor = this._extractors[index];
         doc = {
           ...doc,
-          ...(await this.runExtractor(doc, extractor, file))
+          ...(await this.runExtractor(doc, extractor, file)),
         };
 
         if (index === 0 && !(extractor.name in doc)) {
@@ -99,7 +99,7 @@ class Processor extends EventEmitter {
     }
 
     return {
-      [extractor.name]: extra
+      [extractor.name]: extra,
     };
   }
 }

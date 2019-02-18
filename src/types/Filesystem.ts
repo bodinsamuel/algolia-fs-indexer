@@ -1,8 +1,8 @@
-import fs from "fs";
+import fs from 'fs';
 
 export enum FileType {
-  Directory = "Dir",
-  File = "File"
+  Directory = 'Dir',
+  File = 'File',
 }
 
 export interface Item {
