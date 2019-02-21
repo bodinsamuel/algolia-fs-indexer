@@ -60,7 +60,7 @@ if (!DRYRUN) {
   // Classes
   const fs = new Filesystem();
   const explorer = new Explorer(DIR, fs);
-  const processor = new Processor();
+  const processor = new Processor(500);
   const indexer = new Indexer(INDEXNAME, AlgoliaClient);
   const terminal = new Terminal(DRYRUN, explorer, processor, indexer);
   try {

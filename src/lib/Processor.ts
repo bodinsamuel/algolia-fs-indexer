@@ -12,10 +12,10 @@ class Processor extends EventEmitter {
   _concurrent: number;
   _extractors: Extractor[];
 
-  constructor() {
+  constructor(concurrency: number = 10) {
     super();
 
-    this._concurrent = 10;
+    this._concurrent = concurrency;
     this._processing = 0;
     this._items = [];
     this._extractors = [];
