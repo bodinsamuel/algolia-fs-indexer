@@ -7,9 +7,9 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:11.0
+      - image: circleci/node:10.15.3
 
-    working_directory: ~/algolia-fs-indexer
+    working_directory: ~/repo
 
     steps:
       - checkout
