@@ -1,5 +1,5 @@
-import mm from "micromatch";
-import { Item, FileType } from "../types/Filesystem";
+import mm from 'micromatch';
+import { Item, FileType } from '../types/Filesystem';
 
 class Filter {
   private dirs: string[];

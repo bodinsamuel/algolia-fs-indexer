@@ -1,6 +1,6 @@
 {
   "name": "algolia-fs-indexer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Algolia Filesystem Indexer",
   "repository": "https://github.com/bodinsamuel/algolia-fs-indexer.git",
   "author": "Samuel Bodin <samuel.bodin@algolia.com>",
@@ -52,5 +52,11 @@
     "collectCoverageFrom": [
       "src/lib/**/*.ts"
     ]
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
   }
 }
