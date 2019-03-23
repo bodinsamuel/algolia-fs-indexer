@@ -9,7 +9,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node --files --project tsconfig.json' src/index.ts",
-    "build": "tsc -p .",
+    "build": "tsc --build tsconfig.json",
     "cli": "node --no-warnings ./bin/index.js",
     "test": "jest",
     "launch": "yarn build && yarn cli"
