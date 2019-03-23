@@ -29,10 +29,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run:
-          background: true
-          command: yarn build
+      - run: yarn build
 
-      - run:
-          background: true
-          command: yarn test
+      - run: yarn test
