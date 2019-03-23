@@ -2,39 +2,39 @@ import mm from "micromatch";
 import { Item, FileType } from "../types/Filesystem";
 
 class Filter {
-  _dirs: string[];
-  _files: string[];
+  private dirs: string[];
+  private files: string[];
 
   constructor() {
-    this._dirs = [];
-    this._files = [];
+    this.dirs = [];
+    this.files = [];
   }
 
   matchDirs(match: string[]) {
-    this._dirs = match;
+    this.dirs = match;
     return this;
   }
 
   matchFiles(match: string[]) {
-    this._files = match;
+    this.files = match;
     return this;
   }
 
   check(file: Item): boolean {
     if (
-      (this._dirs.length <= 0 && file.type === FileType.Directory) ||
-      (this._files.length <= 0 && file.type === FileType.File)
+      (this.dirs.length <= 0 && file.type === FileType.Directory) ||
+      (this.files.length <= 0 && file.type === FileType.File)
     ) {
       return false;
     }
 
     if (file.type === FileType.File) {
-      return mm.any(file.name, this._files);
+      return mm.any(file.name, this.files);
     } else if (file.type === FileType.Directory) {
-      return mm.any(file.name, this._dirs);
+      return mm.any(file.fullPath, this.dirs, { matchBase: true });
     }
 
-    return true;
+    return false;
   }
 }
 

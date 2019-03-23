@@ -94,6 +94,7 @@ class Terminal {
       console.log("");
       console.log(`${chalk.cyan.bold("Indexed")} ${stats.indexed}`);
     }
+
     if (
       this.explorer.end &&
       this.processor.remaining === 0 &&

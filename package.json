@@ -11,6 +11,7 @@
     "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node --files --project tsconfig.json' src/index.ts",
     "build": "tsc -p .",
     "cli": "node --no-warnings ./bin/index.js",
+    "test": "jest",
     "launch": "yarn build && yarn cli"
   },
   "bin": {
@@ -32,9 +33,24 @@
     "video-extensions": "1.1.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "7.4.2",
+    "@babel/preset-typescript": "7.3.3",
     "@types/algoliasearch": "3.30.2",
     "@types/figlet": "1.2.0",
+    "@types/jest": "24.0.11",
     "@types/micromatch": "3.1.0",
-    "@types/node": "10.12.24"
+    "@types/node": "10.12.24",
+    "jest": "24.5.0"
+  },
+  "engines": {
+    "node": "^11.0.0",
+    "yarn": "^1.12.0"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/lib/**/*.ts"
+    ]
   }
 }
