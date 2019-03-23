@@ -30,8 +30,9 @@ jobs:
 
       # run tests!
       - run:
-        background: true
-        command: yarn build
+          background: true
+          command: yarn build
+
       - run:
-        background: true
-        command: yarn test
+          background: true
+          command: yarn test
