@@ -1,12 +1,12 @@
-import { Item } from "../types/Filesystem";
-import Filter from "./Filter";
+import { Item } from '../types/Filesystem';
+import Filter from './Filter';
 
 class Extractor {
   name: string;
   _filter?: Filter;
 
   constructor() {
-    this.name = "";
+    this.name = '';
   }
 
   async run(file: Item): Promise<any> {

@@ -1,9 +1,9 @@
-import path from "path";
-import fs, { Dirent } from "fs";
+import path from 'path';
+import fs, { Dirent } from 'fs';
 const fsPromises = fs.promises;
 
-import ExplorerError from "./Error";
-import { Item, FileType } from "../types/Filesystem";
+import ExplorerError from './Error';
+import { Item, FileType } from '../types/Filesystem';
 
 class Filesystem {
   async stats(path: string): Promise<fs.Stats> {
@@ -19,7 +19,7 @@ class Filesystem {
     try {
       const readdir = await fsPromises.readdir(pathName, {
         // @ts-ignore
-        withFileTypes: true
+        withFileTypes: true,
       });
       const promises: Promise<Item | void>[] = readdir.map(
         async (file: Dirent): Promise<Item | void> => {
@@ -36,7 +36,7 @@ class Filesystem {
             fullPath: fullPath,
             extension: path.extname(file.name).substr(1),
             buffer: undefined, //file.isFile() && fs.readFileSync(fullPath),
-            stats
+            stats,
           };
         }
       );

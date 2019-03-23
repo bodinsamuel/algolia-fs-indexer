@@ -29,7 +29,7 @@ class Filter {
     }
 
     if (file.type === FileType.File) {
-      return mm.any(file.name, this.files);
+      return mm.any(file.name, this.files, { dot: true });
     } else if (file.type === FileType.Directory) {
       return mm.any(file.fullPath, this.dirs, { matchBase: true });
     }

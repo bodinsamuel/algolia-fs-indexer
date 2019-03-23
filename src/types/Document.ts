@@ -1,4 +1,4 @@
-import { FileType } from "./Filesystem";
+import { FileType } from './Filesystem';
 
 export interface Document {
   objectID: string;

@@ -1,6 +1,6 @@
-declare module "clear" {
+declare module 'clear' {
   const content: () => void;
   export default content;
 }
 
-declare module "clui";
+declare module 'clui';

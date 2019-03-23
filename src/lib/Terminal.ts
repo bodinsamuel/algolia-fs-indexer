@@ -1,9 +1,9 @@
-import readline from "readline";
-import chalk from "chalk";
-import Explorer from "./Explorer";
-import Processor from "./Processor";
-import Indexer from "./Indexer";
-import { Item } from "../types/Filesystem";
+import readline from 'readline';
+import chalk from 'chalk';
+import Explorer from './Explorer';
+import Processor from './Processor';
+import Indexer from './Indexer';
+import { Item } from '../types/Filesystem';
 
 export interface Stats {
   found: number;
@@ -19,7 +19,7 @@ class Terminal {
     skipped: 0,
     todo: { total: 0, Dir: 0, File: 0 },
     processed: 0,
-    indexed: 0
+    indexed: 0,
   };
   private interval: any;
   private dryrun: boolean;
@@ -38,20 +38,20 @@ class Terminal {
     this.processor = processor;
     this.indexer = indexer;
 
-    explorer.on("read", count => {
+    explorer.on('read', count => {
       this.stats.found += count;
     });
-    explorer.on("skipped", () => {
+    explorer.on('skipped', () => {
       this.stats.skipped += 1;
     });
-    explorer.on("item", (item: Item) => {
+    explorer.on('item', (item: Item) => {
       this.stats.todo.total += 1;
       this.stats.todo[item.type] += 1;
     });
-    processor.on("document", () => {
+    processor.on('document', () => {
       this.stats.processed += 1;
     });
-    indexer.on("indexed", ({ count }) => {
+    indexer.on('indexed', ({ count }) => {
       this.stats.indexed += count;
     });
   }
@@ -72,27 +72,31 @@ class Terminal {
     readline.cursorTo(process.stdout, 0, 6);
     readline.clearScreenDown(process.stdout);
     if (this.dryrun) {
-      console.log(chalk.greenBright("Doing a dry run..."));
+      console.log(chalk.greenBright('Doing a dry run...'), this.explorer._base);
+    } else {
+      console.log(chalk.greenBright('Indexing...'), this.explorer._base);
     }
 
-    console.log(chalk.gray("---------"));
-    console.log(chalk.gray(`Read ${stats.found} - Skipped ${stats.skipped}`));
-    console.log(chalk.gray("---------"));
+    console.log(chalk.gray('---------'));
+    console.log(chalk.gray(`Read ${stats.found} [ Skipped ${stats.skipped} ]`));
+    console.log(chalk.gray('---------'));
 
-    console.log(`${chalk.cyan.bold("Found")} ${stats.todo.total}`);
-    console.log(` - ${chalk.blueBright("Directories")} ${stats.todo.Dir || 0}`);
-    console.log(` - ${chalk.blueBright("Files")} ${stats.todo.File || 0}`);
-
-    console.log(chalk.gray("---------"));
     console.log(
-      `${chalk.cyan.bold("Processing")} ${this.processor._processing}`
+      `${chalk.cyan.bold('Found')} ${stats.todo.total}`,
+      `[ ${chalk.blueBright('Directories')} ${stats.todo.Dir ||
+        0} -- ${chalk.blueBright('Files')} ${stats.todo.File || 0} ]`
     );
-    console.log(`${chalk.cyan.bold("Done")} ${stats.processed}`);
+
+    console.log(chalk.gray('---------'));
+    console.log(
+      `${chalk.cyan.bold('Processing')} ${this.processor._processing}`
+    );
+    console.log(`${chalk.cyan.bold('Done')} ${stats.processed}`);
 
     if (!this.dryrun) {
-      console.log(chalk.gray("---------"));
-      console.log("");
-      console.log(`${chalk.cyan.bold("Indexed")} ${stats.indexed}`);
+      console.log(chalk.gray('---------'));
+      console.log('');
+      console.log(`${chalk.cyan.bold('Indexed')} ${stats.indexed}`);
     }
 
     if (
@@ -101,9 +105,9 @@ class Terminal {
       this.processor.processing === 0 &&
       (this.indexer.remaining === 0 || this.dryrun)
     ) {
-      console.log(chalk.gray("---------"));
-      console.log(chalk.greenBright("Done"));
-      console.log(this.indexer._items);
+      console.log(chalk.gray('---------'));
+      console.log(chalk.greenBright('Done'));
+      // console.log(this.indexer._items);
       this.stop();
     }
   }

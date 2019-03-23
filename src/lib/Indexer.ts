@@ -1,7 +1,7 @@
-import Algolia from "algoliasearch";
-import { EventEmitter } from "events";
+import Algolia from 'algoliasearch';
+import { EventEmitter } from 'events';
 
-import { Document } from "../types/Document";
+import { Document } from '../types/Document';
 
 class Indexer extends EventEmitter {
   _algolia?: Algolia.Client;
@@ -38,21 +38,21 @@ class Indexer extends EventEmitter {
       docs.map(
         (doc): Algolia.Action => {
           return {
-            action: "addObject",
+            action: 'addObject',
             indexName: this._index,
-            body: doc as Object
+            body: doc as Object,
           };
         }
       )
     );
-    this.emit("indexed", { count: docs.length });
+    this.emit('indexed', { count: docs.length });
   }
 
   async indexAll(): Promise<Boolean> {
     while (this._items.length >= 0) {
       await this.indexChunk();
     }
-    this.emit("end");
+    this.emit('end');
     return true;
   }
 

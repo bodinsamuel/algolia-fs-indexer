@@ -1,44 +1,50 @@
 #!/usr/bin/env node
 
-import chalk from "chalk";
-import clear from "clear";
-import figlet from "figlet";
-import commander from "commander";
-import Algolia from "algoliasearch";
+// import path from 'path';
+import chalk from 'chalk';
+import clear from 'clear';
+import figlet from 'figlet';
+import commander from 'commander';
+import Algolia from 'algoliasearch';
 
-import Explorer from "./lib/Explorer";
-import { Images } from "./lib/extractors";
-import Filesystem from "./lib/Filesystem";
-import Indexer from "./lib/Indexer";
-import Processor from "./lib/Processor";
+import Explorer from './lib/Explorer';
+import Filesystem from './lib/Filesystem';
+import Indexer from './lib/Indexer';
+import Processor from './lib/Processor';
 
-import { Item } from "./types/Filesystem";
-import { Document } from "./types/Document";
-import Filter from "./lib/Filter";
-import Terminal from "./lib/Terminal";
+import { Item } from './types/Filesystem';
+import { Document } from './types/Document';
+import Filter from './lib/Filter';
+import Terminal from './lib/Terminal';
 
 // ************************************************ START
+// let DIR = __dirname;
+let DIR = '/Users/samuelbodin/code/crawler';
 commander
-  .version("0.0.1")
-  .option("-d, --dryrun", "Print exploration results without indexing", true)
-  .option("-a, --app <id>", "Use this Algolia App <id>")
-  .option("-k, --key <string>", "Use this Algolia Api <Key>")
+  .version('0.0.1')
+  .option('-d, --dryrun', 'Print exploration results without indexing', true)
+  .option('-a, --app <id>', 'Use this Algolia App <id>')
+  .option('-k, --key <string>', 'Use this Algolia Api <Key>')
   .option(
-    "-i, --index <name>",
-    "Use this Algolia Index <name> to store results",
-    "fs-index"
+    '-i, --index <name>',
+    'Use this Algolia Index <name> to store results',
+    'fs-index'
   )
+  .usage('[options] <dir>')
+  .arguments('<dir>')
+  .action(function(dir) {
+    DIR = dir;
+  })
   .parse(process.argv);
 
 const APPID = process.env.APPID || commander.app;
 const APIKEY = process.env.APIKEY || commander.key;
 const INDEXNAME = process.env.INDEXNAME || commander.index;
 let DRYRUN = commander.dryrun;
-const base = "/Users/samuelbodin/Dropbox/scan/A001";
 
 clear();
 console.log(
-  chalk.red(figlet.textSync("algolia-fs", { horizontalLayout: "full" }))
+  chalk.red(figlet.textSync('algolia-fs', { horizontalLayout: 'full' }))
 );
 
 if (!APPID && !APIKEY) {
@@ -53,35 +59,21 @@ if (!DRYRUN) {
 (async () => {
   // Classes
   const fs = new Filesystem();
-  const explorer = new Explorer(base, fs);
-  const processor = new Processor();
+  const explorer = new Explorer(DIR, fs);
+  const processor = new Processor(500);
   const indexer = new Indexer(INDEXNAME, AlgoliaClient);
   const terminal = new Terminal(DRYRUN, explorer, processor, indexer);
   try {
     // Events
-    explorer.on("item", (item: Item) => {
+    explorer.on('item', (item: Item) => {
       processor.push(item);
     });
 
-    processor.on("document", (doc: Document) => {
+    processor.on('document', (doc: Document) => {
       indexer.push(doc);
     });
 
-    // ********************************************************* Actual content
-    explorer.filter(
-      new Filter().matchFiles(["*.jpg", "*.tif", "*.png"]).matchDirs(["*01*"])
-    );
-
-    processor.extract(
-      new Images()
-        .filter(new Filter().matchFiles(["*.tif"]))
-        .size()
-        .geoloc()
-        .keywords()
-        .camera()
-        .region()
-    );
-    // *********************************************************
+    explorer.filter(new Filter().matchFiles(['*']).matchDirs(['*']));
 
     terminal.start();
     await explorer.start();
